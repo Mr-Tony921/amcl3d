@@ -108,6 +108,14 @@ private:
    */
   void rangeCallback(const rosinrange_msg::RangePoseConstPtr& msg);
 
+  /*! \brief To process initial pose topic.
+   *
+   * \param msg PoseWithCovarianceStamped.
+   *
+   * For xju simulation
+   */
+  void initialPoseReceived(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg);
+
   /*! \brief To check motion and time thresholds for AMCL update.
    *
    * \return <b>bool=False</b> - If there are problems with the checks.
@@ -182,6 +190,7 @@ private:
   ros::Subscriber point_sub_; /*!< UAV point cloud subscriber */
   ros::Subscriber odom_sub_;  /*!< Odometry subscriber */
   ros::Subscriber range_sub_; /*!< Radio-range sensor information subscriber */
+  ros::Subscriber initial_pose_sub_; /*!< initial pose subcriber */
 
   ros::Publisher particles_pose_pub_; /*!< Particles publisher */
   ros::Publisher range_markers_pub_;  /*!< Radio-range sensor information publisher */

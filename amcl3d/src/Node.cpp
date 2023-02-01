@@ -61,6 +61,7 @@ void Node::spin()
   point_sub_ = nh_.subscribe("/laser_sensor", 1, &Node::pointcloudCallback, this);
   odom_sub_ = nh_.subscribe("/odometry", 1, &Node::odomCallback, this);
   range_sub_ = nh_.subscribe("/radiorange_sensor", 1, &Node::rangeCallback, this);
+  initial_pose_sub_ = nh_.subscribe("/initialpose", 1, &Node::initialPoseReceived, this);
 
   particles_pose_pub_ = nh_.advertise<geometry_msgs::PoseArray>("particle_cloud", 1, true);
   range_markers_pub_ = nh_.advertise<visualization_msgs::Marker>("range", 0);
@@ -342,6 +343,15 @@ void Node::rangeCallback(const rosinrange_msg::RangePoseConstPtr& msg)
   rvizMarkerPublish(msg->source_id, static_cast<float>(msg->range), uav, anchor);
 
   ROS_DEBUG("rangeCallback close");
+}
+
+void Node::initialPoseReceived(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg)
+{
+  tf::Transform init_pose;
+  init_pose.setOrigin(tf::Vector3(msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z));
+  init_pose.setRotation(tf::Quaternion(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w));
+  setInitialPose(init_pose, parameters_.init_x_dev_, parameters_.init_y_dev_, parameters_.init_z_dev_,
+                 parameters_.init_a_dev_);
 }
 
 bool Node::checkUpdateThresholds()
