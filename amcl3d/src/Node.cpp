@@ -348,7 +348,7 @@ void Node::rangeCallback(const rosinrange_msg::RangePoseConstPtr& msg)
 void Node::initialPoseReceived(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg)
 {
   tf::Transform init_pose;
-  init_pose.setOrigin(tf::Vector3(msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z));
+  init_pose.setOrigin(tf::Vector3(msg->pose.pose.position.x, msg->pose.pose.position.y, parameters_.init_z_));
   init_pose.setRotation(tf::Quaternion(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w));
   setInitialPose(init_pose, parameters_.init_x_dev_, parameters_.init_y_dev_, parameters_.init_z_dev_,
                  parameters_.init_a_dev_);
